@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #ffffff;
+            padding: 40px 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #000000;
+        }
+
+        .input-section {
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            max-width: 600px;
+            padding: 12px 16px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #4285f4;
+        }
+
+        .main-buttons-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: flex-start;
+        }
+
+        .script-section {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            flex: 1;
+            max-width: 300px;
+        }
+
+        .script-section > button {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .mp3-section {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+            flex: 1;
+            max-width: 300px;
+        }
+
+        .mp3-section > button {
+            width: 100%;
+        }
+
+        .content-row {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+        }
+
+        .left-content {
+            flex: 0 0 auto;
+            max-width: 600px;
+        }
+
+        .right-content {
+            flex: 0 0 auto;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+            font-weight: 500;
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-1px);
+        }
+
+        button:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background-color: #4285f4;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background-color: #357ae8;
+        }
+
+        .btn-primary:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .view-link {
+            color: #4285f4;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: underline;
+            transition: color 0.3s;
+            user-select: none;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        .view-link:hover {
+            color: #357ae8;
+        }
+
+        .script-box {
+            width: 100%;
+            max-width: 600px;
+            height: 600px;
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background-color: #ffffff;
+            display: none;
+            margin-top: 20px;
+        }
+
+        .script-box.show {
+            display: block;
+        }
+
+        .script-box h2 {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #000;
+            text-align: center;
+        }
+
+        .script-content {
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #333;
+            height: calc(100% - 50px);
+            overflow-y: auto;
+        }
+
+        .play-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .play-button {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s, transform 0.1s;
+            background-color: #cccccc;
+        }
+
+        .play-button:hover:not(.disabled) {
+            transform: scale(1.05);
+        }
+
+        .play-button.active {
+            background-color: #4285f4;
+        }
+
+        .play-button.disabled {
+            cursor: not-allowed;
+            background-color: #cccccc;
+        }
+
+        .play-icon {
+            width: 0;
+            height: 0;
+            border-left: 20px solid white;
+            border-top: 12px solid transparent;
+            border-bottom: 12px solid transparent;
+            margin-left: 4px;
+        }
+
+        .play-icon.paused {
+            border: none;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            gap: 4px;
+            margin-left: 0;
+        }
+
+        .play-icon.paused::before,
+        .play-icon.paused::after {
+            content: "";
+            width: 6px;
+            height: 20px;
+            background-color: white;
+        }
+
+        .timer {
+            font-size: 16px;
+            color: #666;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .error {
+            color: #d32f2f;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #ffebee;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        audio {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chatter</h1>
+    
+    <div class="input-section">
+        <label for="wiki-url">Please provide wikipedia url</label>
+        <input type="text" id="wiki-url" placeholder="https://en.wikipedia.org/wiki/..." />
+        <div class="error" id="error-message"></div>
+    </div>
+
+    <div class="main-buttons-row">
+        <div class="script-section">
+            <button class="btn-primary" id="generate-script-btn">Generate Script</button>
+            <span class="view-link" id="view-link">view</span>
+        </div>
+        <div class="mp3-section">
+            <button class="btn-primary" id="generate-mp3-btn" disabled>Generate MP3</button>
+            <div class="play-section">
+                <button class="play-button disabled" id="play-button">
+                    <div class="play-icon" id="play-icon"></div>
+                </button>
+                <div class="timer" id="timer">0:00 / 0:00</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-row">
+        <div class="left-content">
+            <div class="script-box" id="script-box">
+                <h2>Script</h2>
+                <div class="script-content" id="script-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="audio-player"></audio>
+
+    <script>
+        const wikiUrlInput = document.getElementById('wiki-url');
+        const generateScriptBtn = document.getElementById('generate-script-btn');
+        const generateMp3Btn = document.getElementById('generate-mp3-btn');
+        const viewLink = document.getElementById('view-link');
+        const scriptBox = document.getElementById('script-box');
+        const scriptContent = document.getElementById('script-content');
+        const playButton = document.getElementById('play-button');
+        const playIcon = document.getElementById('play-icon');
+        const audioPlayer = document.getElementById('audio-player');
+        const timer = document.getElementById('timer');
+        const errorMessage = document.getElementById('error-message');
+
+        let currentScript = null;
+        let currentAudioUrl = null;
+        let audioDuration = 0;
+        let isPlaying = false;
+        let timerInterval = null;
+
+        // Generate Script
+        generateScriptBtn.addEventListener('click', async () => {
+            const wikiUrl = wikiUrlInput.value.trim();
+            
+            if (!wikiUrl) {
+                showError('Please enter a Wikipedia URL');
+                return;
+            }
+
+            if (!wikiUrl.includes('wikipedia.org')) {
+                showError('Please enter a valid Wikipedia URL');
+                return;
+            }
+
+            generateScriptBtn.disabled = true;
+            generateScriptBtn.innerHTML = '<span class="loading"></span>';
+            generateMp3Btn.disabled = true;
+            hideError();
+
+            try {
+                const response = await fetch('/generate-script', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ wiki_url: wikiUrl })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to generate script');
+                }
+
+                currentScript = data.script;
+                scriptContent.textContent = currentScript;
+                
+                // Enable Generate MP3 button
+                generateMp3Btn.disabled = false;
+
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                generateScriptBtn.disabled = false;
+                generateScriptBtn.innerHTML = 'Generate Script';
+            }
+        });
+
+        // Generate MP3
+        generateMp3Btn.addEventListener('click', async () => {
+            if (!currentScript) {
+                showError('Please generate a script first');
+                return;
+            }
+
+            generateMp3Btn.disabled = true;
+            generateMp3Btn.innerHTML = '<span class="loading"></span>';
+            hideError();
+
+            try {
+                const response = await fetch('/generate-mp3', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ script: currentScript })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to generate MP3');
+                }
+
+                currentAudioUrl = data.audio_url;
+                audioDuration = data.duration;
+                audioPlayer.src = currentAudioUrl;
+
+                // Enable play button
+                playButton.classList.remove('disabled');
+                playButton.classList.add('active');
+
+                // Update timer with total duration
+                updateTimer(0, audioDuration);
+
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                generateMp3Btn.disabled = false;
+                generateMp3Btn.innerHTML = 'Generate MP3';
+            }
+        });
+
+        // View link toggle
+        viewLink.addEventListener('click', () => {
+            scriptBox.classList.toggle('show');
+        });
+
+        // Play button
+        playButton.addEventListener('click', () => {
+            if (playButton.classList.contains('disabled') || !currentAudioUrl) {
+                return;
+            }
+
+            if (isPlaying) {
+                audioPlayer.pause();
+                isPlaying = false;
+                playIcon.classList.remove('paused');
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                }
+            } else {
+                audioPlayer.play();
+                isPlaying = true;
+                playIcon.classList.add('paused');
+                
+                // Start timer
+                timerInterval = setInterval(() => {
+                    updateTimer(audioPlayer.currentTime, audioDuration);
+                }, 100);
+            }
+        });
+
+        audioPlayer.addEventListener('ended', () => {
+            isPlaying = false;
+            playIcon.classList.remove('paused');
+            updateTimer(0, audioDuration);
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        });
+
+        audioPlayer.addEventListener('loadedmetadata', () => {
+            audioDuration = audioPlayer.duration;
+            updateTimer(0, audioDuration);
+        });
+
+        function updateTimer(current, total) {
+            const currentMinutes = Math.floor(current / 60);
+            const currentSeconds = Math.floor(current % 60);
+            const totalMinutes = Math.floor(total / 60);
+            const totalSeconds = Math.floor(total % 60);
+            
+            timer.textContent = `${currentMinutes}:${String(currentSeconds).padStart(2, '0')} / ${totalMinutes}:${String(totalSeconds).padStart(2, '0')}`;
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.add('show');
+        }
+
+        function hideError() {
+            errorMessage.classList.remove('show');
+        }
+
+        // Allow Enter key to trigger generate script
+        wikiUrlInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                generateScriptBtn.click();
+            }
+        });
+    </script>
+</body>
+</html>

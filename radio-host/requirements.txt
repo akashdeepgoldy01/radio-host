@@ -1,0 +1,7 @@
+openai
+requests
+beautifulsoup4
+pydub
+python-dotenv
+flask
+audioop-lts

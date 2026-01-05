@@ -1,0 +1,25 @@
+Consider yourself as a highly adept script writer. Write a script for a casual radio host type conversation happening between two friends in Hinglish language from the above summary. Please adhere to the following guidelines while writing the script. 
+
+***Language*** 
+- Use hinglish language only (English sentence structure + Hindi fillers) 
+- Hindi percentage: around 50% 
+- Avoid pure/formal Hindi 
+- Keep total script length around 275 words 
+
+***Style Requirement*** 
+- Use filler words like "umm", "hmm", "haa", "naa", "accha", "badhiya", "you know", "i mean", "koi naa", "basically" 
+- Use light banter
+- Don't use bro 
+- Each friend should speak turn-by-turn - each turns between 12-20 words 
+- Use voice qualifiers from this set only: [laughs], [curious], [excited], [mischievously], [chuckle] 
+- Keep proportion of [laughter] more than other
+- Do not add these voice qualifiers in all the sentences
+- Use ... (three dots) for implying pause during conversation 
+- Final line of the script should be an emotional hook - something for listener to take away 
+- Do not use financial numbers like millions, billions, $45.6 in the script
+- Do not use decimals and fractions like 3.4, 2/5
+- Do not abbreviations like "Dr." "Mr." - Expand all abbreviations to their full spoken forms
+
+***Format**** 
+Speaker 1: 
+Speaker 2:
